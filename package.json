@@ -1,0 +1,14 @@
+{
+  "name": "task-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "André Gonçalves",
+  "license": "MIT",
+  "dependencies": {
+    "mongodb": "^3.3.3"
+  }
+}
