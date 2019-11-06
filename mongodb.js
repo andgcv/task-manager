@@ -1,7 +1,9 @@
 // CRUD - create, read, update, delete
-const mongodb = require('mongodb')
-// Needed to initialize the connect
-const MongoClient = mongodb.MongoClient
+// const mongodb = require('mongodb')
+// const MongoClient = mongodb.MongoClient
+// const ObjectID = mongodb.ObjectID
+
+const { MongoClient, ObjectId } = require('mongodb')
 
 const connectionURL = 'mongodb://127.0.0.1:27017'
 const databaseName = 'task-manager'
@@ -13,47 +15,70 @@ MongoClient.connect(connectionURL, { useUnifiedTopology: true }, (error, client)
 
     const db = client.db(databaseName)
 
-    // db.collection('users').insertOne({
-    //     name: 'Andre',
-    //     age: 22
-    // }, (error, result) => {
-    //     if (error) return console.log('Unable to insert user')
+    // db.collection('users').findOne({_id: new ObjectID("5dc1cfdb4efc9502faa267cc")}, (error, user) => {
+    //     if (error) return console.log('Unable to fetch')
 
-    //     // ops is an array of documents
-    //     console.log(result.ops)
+    //     console.log(user)
     // })
 
-    // db.collection('users').insertMany([
-    //     {
-    //         name: "Rui",
-    //         age: 26
-    //     },
-    //     {
-    //         name: "Diana",
-    //         age: 11
+    // db.collection('users').find({age: 22}).toArray((error, users) => {
+    //     console.log(users)
+    // })
+
+    // db.collection('users').find({age: 22}).count((error, count) => {
+    //     console.log(count)
+    // })
+
+    // db.collection('tasks').findOne({_id: new ObjectId("5dc1d09f5cda2503add68f1a")}, (error, task) => {
+    //     if (error) return console.log('Unable to fetch')
+
+    //     console.log(task)
+    // })
+
+    // db.collection('tasks').find({completed: false}).toArray((error, tasks) => {
+    //     if (error) return console.log('Unable to fetch')
+
+    //     console.log(tasks)
+    // })
+
+    // updateOne returns a promise
+    // db.collection('users').updateOne({
+    //     _id: new ObjectId("5dc1cfdb4efc9502faa267cc")
+    // }, {
+    //     $inc: {
+    //         age: 1
     //     }
-    // ], (error, result) => {
-    //     if (error) return console.log('Unable to insert users')
-
-    //     console.log(result.ops)
+    // }).then((result) => {
+    //     console.log(result)
+    // }).catch((error) => {
+    //     console.log(error)
     // })
 
-    db.collection('tasks').insertMany([
-        {
-            description: 'First task!',
-            completed: false
-        },
-        {
-            description: 'Second task?',
-            completed: true
-        },
-        {
-            description: 'Third task...',
-            completed: true
-        }
-    ], (error, result) => {
-        if (error) return console.log('Unable to insert tasks')
+    // db.collection('tasks').updateMany({
+    //     completed: false
+    // }, {
+    //     $set: {
+    //         completed: true
+    //     }
+    // }).then((result) => {
+    //     console.log(result)
+    // }).catch((error) => {
+    //     console.log(error)
+    // })
 
-        console.log(result.ops)
-    })
+    // db.collection('users').deleteMany({
+    //     age:22
+    // }).then((result) => {
+    //     console.log(result)
+    // }).catch((error) => {
+    //     console.log(error)
+    // })
+
+    // db.collection('tasks').deleteMany({
+    //     desc: 'Third task...'
+    // }).then((result) => {
+    //     console.log(result)
+    // }).catch((error) => {
+    //     console.log(error)
+    // })
 })
