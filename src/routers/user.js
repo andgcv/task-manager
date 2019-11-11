@@ -7,7 +7,19 @@ router.post('/users', async (req, res) => {
     const user = new User(req.body)
     try {
         await user.save()
-        res.status(201).send(user)
+        const token = await user.generateAuthToken()
+        res.status(201).send({ user, token })
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
+// Endpoint for the User to login
+router.post('/users/login', async (req, res) => {
+    try {
+        const user = await User.findByCredentials(req.body.email, req.body.password)
+        const token = await user.generateAuthToken()
+        res.send({ user, token })
     } catch (e) {
         res.status(400).send(e)
     }
@@ -36,7 +48,7 @@ router.get('/users/:id', async (req, res) => {
 
 // UPDATE User by ID
 router.patch('/users/:id', async (req, res) => {
-    // Returns an array of strings with our request body properties
+    // Returns an array of strings with our request body keys
     const updates = Object.keys(req.body)
     const allowedUpdates = ['name', 'email', 'password', 'age']
     // If at least one of the request body properties doesn't equal one of the allowedUpdates strings, isValidOperation will be false
@@ -45,7 +57,12 @@ router.patch('/users/:id', async (req, res) => {
     if (!isValidOperation) return res.status(400).send('Invalid updates!')
 
     try {
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        // Find the user by the id we passed in
+        const user = await User.findById(req.params.id)
+        // Update each value individually
+        updates.forEach((update) => user[update] = req.body[update])
+        // Run user.save() which will access our Middleware operations
+        await user.save()
         if (!user) return res.status(404).send('Unable to find user')
         res.send(user)
     } catch (e) {

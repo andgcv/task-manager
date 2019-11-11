@@ -36,14 +36,20 @@ router.get('/tasks/:id', async (req, res) => {
 
 // UPDATE Task by ID
 router.patch('/tasks/:id', async (req, res) => {
+    // Returns an array of strings with our request body keys
     const updates = Object.keys(req.body)
     const allowedUpdates = ['description', 'completed']
+    // If at least one of the request body properties doesn't equal one of the allowedUpdates strings, isValidOperation will be false
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
     
     if (!isValidOperation) return res.status(400).send('Invalid updates!')
 
     try {
-        const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        // Find the task by the id we passed in
+        const task = await Task.findById(req.params.id)
+        // Update each value individually
+        updates.forEach((update) => task[update] = req.body[update])
+        await task.save()
         if (!task) return res.status(404).send('Unable to find task')
         res.send(task)
     } catch (e) {
