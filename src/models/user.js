@@ -74,7 +74,6 @@ userSchema.statics.findByCredentials = async (email, password) => {
     return user
 }
 
-// Take advantage of Middleware to setup custom actions
 // Before the user is saved, run the function to hash the password
 userSchema.pre('save', async function (next) {
     const user = this

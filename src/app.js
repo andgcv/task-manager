@@ -7,13 +7,13 @@ const app = express()
 const port = process.env.PORT || 3000
 
 // Add express middleware function
-// app.use((req, res, next) => {
-//     if (req.method === 'GET') {
-//         res.send('Get disabled')
-//     } else {
-//         next()
-//     }
-// })
+app.use((req, res, next) => {
+    if (req.method === 'GET') {
+        res.send('GET currently unavailable')
+    } else {
+        next()
+    }
+})
 
 // Will parse incoming JSON to an object so we can access it in request handlers
 app.use(express.json())
