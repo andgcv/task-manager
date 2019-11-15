@@ -13,8 +13,9 @@ const auth = async (req, res, next) => {
 
         if (!user) throw new Error()
 
-        // If the route handlers have already fetched the user, there's no reason to do it again and waste time and resources
-
+        // Handler stores the current token for when the User chooses to logout of the current session
+        req.token = token
+        // Handler stores the current user to be displayed when requested
         req.user = user
 
         next()

@@ -15,8 +15,8 @@ router.post('/users', async (req, res) => {
     }
 })
 
-// Endpoint for the User to login
-router.post('/users/login', auth, async (req, res) => {
+// LOGIN endpoint for the User to login
+router.post('/users/login', async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
         const token = await user.generateAuthToken()
@@ -26,9 +26,40 @@ router.post('/users/login', auth, async (req, res) => {
     }
 })
 
+// LOGOUT endpoint for the User to logout
+router.post('/users/logout', auth, async (req, res) => {
+    try {
+        // Delete the token from the User document
+        req.user.tokens = req.user.tokens.filter((token) => {
+            return req.token !== token.token
+        })
+        await req.user.save()
+
+        res.send()
+    } catch (e) {
+        res.status(500).send(e)
+    }
+})
+
+// LOGOUT ALL endpoint for the User to logout of all sessions
+router.post('/users/logoutAll', auth, async (req, res) => {
+    try {
+        req.user.tokens = []
+        await req.user.save()
+
+        res.send()
+    } catch (e) {
+        res.status(500).send(e)
+    }
+})
+
 // READ User's profile information
 router.get('/users/me', auth, async (req, res) => {
-    res.send(req.user)
+    try {
+        res.send(req.user)
+    } catch (e) {
+        res.status(500).send(e)
+    }
 })
 
 // READ User by ID
