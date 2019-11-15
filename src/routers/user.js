@@ -1,5 +1,6 @@
 const express = require('express')
 const User = require('../models/user')
+const auth = require('../middleware/auth')
 const router = new express.Router()
 
 // CREATE User
@@ -15,7 +16,7 @@ router.post('/users', async (req, res) => {
 })
 
 // Endpoint for the User to login
-router.post('/users/login', async (req, res) => {
+router.post('/users/login', auth, async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
         const token = await user.generateAuthToken()
@@ -25,14 +26,9 @@ router.post('/users/login', async (req, res) => {
     }
 })
 
-// READ Users
-router.get('/users', async (req, res) => {
-    try {
-        const users = await User.find({})
-        res.send(users)
-    } catch (e) {
-        res.status(500).send(e)
-    }
+// READ User's profile information
+router.get('/users/me', auth, async (req, res) => {
+    res.send(req.user)
 })
 
 // READ User by ID

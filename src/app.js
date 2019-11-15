@@ -6,14 +6,10 @@ const taskRouter = require('./routers/task')
 const app = express()
 const port = process.env.PORT || 3000
 
-// Add express middleware function
-app.use((req, res, next) => {
-    if (req.method === 'GET') {
-        res.send('GET currently unavailable')
-    } else {
-        next()
-    }
-})
+// Middleware for maintenance mode
+// app.use((req, res, next) => {
+//     res.status(503).send('Site is currently under maintenance, we will be back online shortly!')
+// })
 
 // Will parse incoming JSON to an object so we can access it in request handlers
 app.use(express.json())
