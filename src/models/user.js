@@ -50,6 +50,14 @@ const userSchema = new mongoose.Schema({
     }]
 })
 
+// Setup a virtual so that mongoose can look for each User's tasks
+userSchema.virtual('tasks', {
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'owner'
+})
+
+// Method used to choose which information we want to return to the User on the endpoint response
 userSchema.methods.toJSON = function () {
     const user = this
     // Get a raw object with just our User data attached
@@ -62,6 +70,7 @@ userSchema.methods.toJSON = function () {
     return userObject
 }
 
+// Method used to generate an Authentication Token which will be stored in the User document
 userSchema.methods.generateAuthToken = async function () {
     const user = this
     // Create a new token for the user
@@ -73,6 +82,7 @@ userSchema.methods.generateAuthToken = async function () {
     return token
 }
 
+// Static method used to authenticate the information passed in so the User can login
 userSchema.statics.findByCredentials = async (email, password) => {
     // Find user by the email passed in
     const user = await User.findOne({ email })
