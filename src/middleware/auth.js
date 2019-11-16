@@ -11,7 +11,7 @@ const auth = async (req, res, next) => {
         // If the token is valid, proceed and grab the id embedded in the token and find it's user, will also look if the user still has the token value stored.
         const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
 
-        if (!user) throw new Error()
+        if (!user) throw new Error('Please authenticate.')
 
         // Handler stores the current token for when the User chooses to logout of the current session
         req.token = token
@@ -20,7 +20,7 @@ const auth = async (req, res, next) => {
 
         next()
     } catch (e) {
-        res.status(401).send({ error: 'Please authenticate.' })
+        res.status(401).send({ error: e.message })
     }    
 }
 

@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const Task = require('./task')
 
 // User Schema
 const userSchema = new mongoose.Schema({
@@ -29,7 +30,7 @@ const userSchema = new mongoose.Schema({
         minlength: 7,
         validate(value) {
             if (value.toLowerCase().includes('password')) {
-                throw new Error('Password cannot contain the word "password" in it')
+                throw new Error('Password cannot contain the word password in it')
             }
         }
     },
@@ -87,16 +88,19 @@ userSchema.statics.findByCredentials = async (email, password) => {
     // Find user by the email passed in
     const user = await User.findOne({ email })
     // If we can't find an user with the email passed in, throw an error
-    if (!user) throw new Error('Unable to login')
+    if (!user) {
+        throw new Error('Unable to login')
+    }
     // Check if the password passed in matches the one stored in the user document (hashed)
     const isMatch = await bcrypt.compare(password, user.password)
     // If the password doesn't match, throw an error
-    if (!isMatch) throw new Error('Unable to login')
-
+    if (!isMatch) {
+        throw new Error('Unable to login')
+    }
     return user
 }
 
-// Before the user is saved, run the function to hash the password
+// Hash the password of the User, before the User is saved
 userSchema.pre('save', async function (next) {
     const user = this
 
@@ -106,6 +110,14 @@ userSchema.pre('save', async function (next) {
     }
 
     // Call next() when we're done
+    next()
+})
+
+// Delete User tasks when User is removed from the database
+userSchema.pre('remove', async function (next) {
+    const user = this
+    // Delete all tasks that have the owner field equal to the currently authenticated User's ID
+    await Task.deleteMany({ owner: user._id })
     next()
 })
 
