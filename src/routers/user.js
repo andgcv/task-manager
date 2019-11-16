@@ -3,7 +3,7 @@ const User = require('../models/user')
 const auth = require('../middleware/auth')
 const router = new express.Router()
 
-// CREATE User
+// CREATE User endpoint
 router.post('/users', async (req, res) => {
     const user = new User(req.body)
     try {
@@ -26,7 +26,7 @@ router.post('/users/login', async (req, res) => {
     }
 })
 
-// LOGOUT endpoint for the User to logout
+// LOGOUT endpoint for the currently authenticated User to logout
 router.post('/users/logout', auth, async (req, res) => {
     try {
         // Delete the token from the User document
@@ -41,7 +41,7 @@ router.post('/users/logout', auth, async (req, res) => {
     }
 })
 
-// LOGOUT ALL endpoint for the User to logout of all sessions
+// LOGOUT ALL endpoint for the currently authenticated User to logout of all sessions
 router.post('/users/logoutAll', auth, async (req, res) => {
     try {
         req.user.tokens = []
@@ -53,7 +53,7 @@ router.post('/users/logoutAll', auth, async (req, res) => {
     }
 })
 
-// READ User's profile information
+// READ currently authenticated User's profile information
 router.get('/users/me', auth, async (req, res) => {
     try {
         res.send(req.user)
@@ -62,8 +62,8 @@ router.get('/users/me', auth, async (req, res) => {
     }
 })
 
-// UPDATE User by ID
-router.patch('/users/:id', async (req, res) => {
+// UPDATE currently authenticated User's information
+router.patch('/users/me', auth, async (req, res) => {
     // Returns an array of strings with our request body keys
     const updates = Object.keys(req.body)
     const allowedUpdates = ['name', 'email', 'password', 'age']
@@ -73,20 +73,16 @@ router.patch('/users/:id', async (req, res) => {
     if (!isValidOperation) return res.status(400).send('Invalid updates!')
 
     try {
-        // Find the user by the id we passed in
-        const user = await User.findById(req.params.id)
         // Update each value individually
-        updates.forEach((update) => user[update] = req.body[update])
-        // Run user.save() which will access our Middleware operations
-        await user.save()
-        if (!user) return res.status(404).send('Unable to find user')
-        res.send(user)
+        updates.forEach((update) => req.user[update] = req.body[update])
+        await req.user.save()
+        res.send(req.user)
     } catch (e) {
         res.status(400).send(e)
     }
 })
 
-// DELETE User by ID
+// DELETE currently authenticated User
 router.delete('/users/me', auth, async (req, res) => {
     try {
         await req.user.remove()
