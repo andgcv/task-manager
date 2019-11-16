@@ -62,17 +62,6 @@ router.get('/users/me', auth, async (req, res) => {
     }
 })
 
-// READ User by ID
-router.get('/users/:id', async (req, res) => {
-    try {
-        const user = await User.findById(req.params.id)
-        if (!user) return res.status(404).send('Unable to find user')
-        res.send(user)
-    } catch (e) {
-        res.status(500).send(e)
-    }
-})
-
 // UPDATE User by ID
 router.patch('/users/:id', async (req, res) => {
     // Returns an array of strings with our request body keys

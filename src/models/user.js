@@ -50,6 +50,18 @@ const userSchema = new mongoose.Schema({
     }]
 })
 
+userSchema.methods.toJSON = function () {
+    const user = this
+    // Get a raw object with just our User data attached
+    const userObject = user.toObject()
+
+    // Remove the password and tokens from the object, which will not be returned in the response
+    delete userObject.password
+    delete userObject.tokens
+
+    return userObject
+}
+
 userSchema.methods.generateAuthToken = async function () {
     const user = this
     // Create a new token for the user
