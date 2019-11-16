@@ -18,17 +18,17 @@ router.post('/tasks', auth, async (req, res) => {
     }
 })
 
-// READ Tasks
-router.get('/tasks', async (req, res) => {
+// READ Tasks of currently authenticated User
+router.get('/tasks', auth, async (req, res) => {
     try {
-        const tasks = await Task.find({})
+        const tasks = await Task.find({owner: req.user._id})
         res.send(tasks)
     } catch (e) {
         res.status(500).send(e)
     }
 })
 
-// READ Task by ID
+// READ Task by ID of currently authenticated User
 router.get('/tasks/:id', auth, async (req, res) => {
     try {
         const task = await Task.findOne({ _id: req.params.id, owner: req.user._id })
