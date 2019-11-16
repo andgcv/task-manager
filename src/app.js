@@ -19,20 +19,3 @@ app.use(taskRouter)
 app.listen(port, () => {
     console.log(`Server is up on port ${port}`)
 })
-
-// const Task = require('./models/task')
-// const User = require('./models/user')
-
-// const main = async () => {
-//     // const task = await Task.findById('5dcfcbea63e2a02df0ef80b7')
-//     // // .populate() to populate a property, .execPopulate() which is going to find the User associated with the task and populate owner with the entire document
-//     // await task.populate('owner').execPopulate()
-//     // console.log (task.owner)
-
-//     const user = await User.findById('5dcfc9ddd767b92c480321cb')
-//     // Will populate the User's tasks. because it's a virtual, nothing actually gets stored in the User document
-//     await user.populate('tasks').execPopulate()
-//     console.log(user.tasks)
-// }
-
-// main()
