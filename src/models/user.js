@@ -49,6 +49,8 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }]
+}, {
+    timestamps: true
 })
 
 // Setup a virtual so that mongoose can look for each User's tasks
