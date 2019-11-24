@@ -20,13 +20,19 @@ router.post('/tasks', auth, async (req, res) => {
 
 // READ Tasks of currently authenticated User
 router.get('/tasks', auth, async (req, res) => {
+    // Add optional filters to the tasks that get displayed to the user
     const match = {}
     if (req.query.completed) match.completed = req.query.completed === 'true'
 
     try {
+        // Populate the Users task virtual field, with its path, any filters provided
         await req.user.populate({
             path: 'tasks',
             match,
+            options: {
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip)
+            }
         }).execPopulate()
         res.send(req.user.tasks)
     } catch (e) {
