@@ -20,9 +20,17 @@ router.post('/tasks', auth, async (req, res) => {
 
 // READ Tasks of currently authenticated User
 router.get('/tasks', auth, async (req, res) => {
-    // Add optional filters to the tasks that get displayed to the user
     const match = {}
+    const sort = {}
+
+    // Add optional filters to the tasks that get displayed to the user
     if (req.query.completed) match.completed = req.query.completed === 'true'
+
+    // Add optional "sort by" support that changes the order of the tasks displayed
+    if (req.query.sortBy) {
+        const parts = req.query.sortBy.split('_')
+        sort[parts[0]] = parts[1] === 'asc' ? 1 : -1
+    }
 
     try {
         // Populate the Users task virtual field, with its path, any filters provided
@@ -31,7 +39,8 @@ router.get('/tasks', auth, async (req, res) => {
             match,
             options: {
                 limit: parseInt(req.query.limit),
-                skip: parseInt(req.query.skip)
+                skip: parseInt(req.query.skip),
+                sort
             }
         }).execPopulate()
         res.send(req.user.tasks)
