@@ -1,13 +1,15 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
+const jwtSecret = process.env.JWT_SECRET
+
 // Middleware authentication function to authenticate the user's requests
 const auth = async (req, res, next) => {
     try {
         // req.header to get access the incoming Authorization token, and remove Bearer from it
         const token = req.header('Authorization').replace('Bearer ', '')
         // Decoded payload for the token
-        const decoded = jwt.verify(token, 'andgcv')
+        const decoded = jwt.verify(token, jwtSecret)
         // If the token is valid, proceed and grab the id embedded in the token and find it's user, will also look if the user still has the token value stored.
         const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
 

@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const Task = require('./task')
 
+const jwtSecret = process.env.JWT_SECRET
+
 // User Schema
 const userSchema = new mongoose.Schema({
     name: {
@@ -77,7 +79,7 @@ userSchema.methods.toJSON = function () {
 userSchema.methods.generateAuthToken = async function () {
     const user = this
     // Create a new token for the user
-    const token = jwt.sign({_id: user._id.toString()}, 'andgcv')
+    const token = jwt.sign({_id: user._id.toString()}, jwtSecret)
     // Store the token in the user document
     user.tokens = user.tokens.concat({ token })
     await user.save()
