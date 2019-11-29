@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "env-cmd -f ./config/dev.env nodemon src/app.js"
+    "dev": "env-cmd -f ./config/dev.env nodemon src/app.js",
+    "test": "jest --watch"
   },
   "author": "André Gonçalves",
   "license": "MIT",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "env-cmd": "^10.0.1",
+    "jest": "^24.9.0",
     "nodemon": "^1.19.4"
   }
 }

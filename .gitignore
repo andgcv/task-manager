@@ -104,5 +104,7 @@ dist
 # TernJS port file
 .tern-port
 
-# Testing directories
+# Testing directories/files
 playground/
+tests/
+math.js
