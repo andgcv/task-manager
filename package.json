@@ -1,7 +1,11 @@
 {
   "name": "task-manager",
   "version": "1.0.0",
-  "description": "",
+  "description": "Web application for authenticated Users to create and manage their Tasks. Created with Node.js, Express, MongoDB and Mongoose.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andgcv/task-manager.git"
+  },
   "main": "app.js",
   "scripts": {
     "start": "node src/app.js",
