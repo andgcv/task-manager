@@ -18,12 +18,12 @@
     "bcryptjs": "^2.4.3",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.5.0",
-    "mongoose": "^5.7.8",
-    "validator": "^12.0.0"
+    "mongodb": "^3.5.5",
+    "mongoose": "^5.9.5",
+    "validator": "^12.2.0"
   },
   "devDependencies": {
-    "env-cmd": "^10.0.1",
+    "env-cmd": "^10.1.0",
     "jest": "^24.9.0",
     "nodemon": "^1.19.4"
   }
